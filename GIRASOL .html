@@ -3,106 +3,77 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Girasol Animado</title>
+<title>Girasol</title>
 
 <style>
-body{
-    margin:0;
-    background:black;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
-}
+    body{
+        margin:0;
+        background:black;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        height:100vh;
+        overflow:hidden;
+    }
 
-canvas{
-    background:black;
-}
+    canvas{
+        background:black;
+    }
 </style>
 </head>
 <body>
 
-<canvas id="canvas" width="900" height="900"></canvas>
+<canvas id="canvas" width="800" height="800"></canvas>
 
 <script>
-
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
-const cx = canvas.width / 2;
-const cy = canvas.height / 2;
+const centerX = canvas.width / 2;
+const centerY = canvas.height / 2;
 
-const GOLDEN_ANG = 137.508 * Math.PI / 180;
+// Dibujar pétalos
+ctx.strokeStyle = "#FFA216";
+ctx.lineWidth = 2;
 
-let petalStep = 0;
-let seedStep = 0;
-
-function drawPetal(i, j){
+for(let i = 0; i < 16; i++){
 
     const angle = (i * 24) * Math.PI / 180;
-    const radius = 150 - j * 6;
 
-    ctx.strokeStyle = "#FFA216";
-    ctx.lineWidth = 2;
+    for(let j = 0; j < 18; j++){
 
-    ctx.beginPath();
+        const radius = 150 - j * 6;
 
-    ctx.ellipse(
-        cx + Math.cos(angle) * 45,
-        cy + Math.sin(angle) * 45,
-        radius * 0.35,
-        radius,
-        angle,
-        0,
-        Math.PI * 2
-    );
-
-    ctx.stroke();
+        ctx.beginPath();
+        ctx.ellipse(
+            centerX + Math.cos(angle) * 50,
+            centerY + Math.sin(angle) * 50,
+            radius * 0.4,
+            radius,
+            angle,
+            0,
+            Math.PI * 2
+        );
+        ctx.stroke();
+    }
 }
 
-function drawSeed(i){
+// Centro del girasol
+const GOLDEN_ANG = 137.508 * Math.PI / 180;
+
+for(let i = 0; i < 140; i++){
 
     const r = 4 * Math.sqrt(i);
     const theta = i * GOLDEN_ANG;
 
-    const x = cx + r * Math.cos(theta);
-    const y = cy + r * Math.sin(theta);
-
-    ctx.fillStyle = "#8B4513";
+    const x = centerX + r * Math.cos(theta);
+    const y = centerY + r * Math.sin(theta);
 
     ctx.beginPath();
     ctx.arc(x, y, 5, 0, Math.PI * 2);
+    ctx.fillStyle = "#8B4513";
     ctx.fill();
 }
-
-function animate(){
-
-    if(petalStep < 16 * 18){
-
-        const i = Math.floor(petalStep / 18);
-        const j = petalStep % 18;
-
-        drawPetal(i, j);
-
-        petalStep++;
-
-        requestAnimationFrame(animate);
-        return;
-    }
-
-    if(seedStep < 140){
-
-        for(let k = 0; k < 2 && seedStep < 140; k++){
-            drawSeed(seedStep);
-            seedStep++;
-        }
-
-        requestAnimationFrame(animate);
-    }
-}
-
-animate();
-
 </script>
 
 </body>
